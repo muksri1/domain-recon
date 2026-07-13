@@ -11,7 +11,7 @@ import time
 
 import requests
 
-from ..models import Finding, Status, Severity
+from ..models import Finding, Severity, Status
 
 CATEGORY = "Attack Surface"
 # crt.sh is frequently overloaded and either fast-fails with 502 or hangs. Keep

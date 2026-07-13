@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import dns.flags
-import dns.resolver
 import dns.message
 import dns.query
+import dns.resolver
 
-from ..models import Finding, Status, Severity
+from ..models import Finding, Severity, Status
 from ..utils import make_resolver
 
 CATEGORY = "DNS Integrity"

@@ -15,7 +15,28 @@ document.addEventListener("DOMContentLoaded", () => {
     [...$("filters").children].forEach((b) => b.classList.toggle("active", b === e.target));
     renderFindings();
   });
+
+  // Query-param entry points: ?demo=1 renders an offline sample report;
+  // ?domain=example.com auto-runs a scan (shareable scan links).
+  const params = new URLSearchParams(location.search);
+  if (params.get("demo") === "1") {
+    loadDemo();
+  } else if (params.get("domain")) {
+    $("domain-input").value = params.get("domain");
+    $("scan-form").requestSubmit();
+  }
 });
+
+async function loadDemo() {
+  try {
+    const resp = await fetch("/api/demo");
+    const data = await resp.json();
+    lastReport = data;
+    renderReport(data);
+  } catch (err) {
+    showError("Could not load demo data.");
+  }
+}
 
 async function onScan(e) {
   e.preventDefault();

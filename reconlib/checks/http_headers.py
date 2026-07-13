@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import requests
 
-from ..models import Finding, Status, Severity
+from ..models import Finding, Severity, Status
 
 CATEGORY = "HTTP Security Headers"
 _TIMEOUT = 10.0

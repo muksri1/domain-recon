@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "domain-recon"
+version = "1.0.0"
+description = "Passive domain security-controls posture review with a web dashboard and CSV export"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Mukesh Srivastava" }]
+requires-python = ">=3.9"
+keywords = ["security", "dns", "tls", "dmarc", "spf", "dnssec", "osint", "reconnaissance"]
+dependencies = [
+    "Flask>=3.0,<4.0",
+    "dnspython>=2.6",
+    "requests>=2.31",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Internet :: Name Service (DNS)",
+]
+
+[project.urls]
+Homepage = "https://github.com/muksri1/domain-recon"
+Repository = "https://github.com/muksri1/domain-recon"
+
+[project.scripts]
+# CLI entry point. The web dashboard (app.py) is run from source or Docker,
+# since it ships template/static assets.
+domain-recon = "cli:main"
+
+[project.optional-dependencies]
+dev = ["ruff>=0.5", "pytest>=8.0"]
+
+[tool.setuptools]
+py-modules = ["cli"]
+
+[tool.setuptools.packages.find]
+include = ["reconlib*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]  # long lines are fine in user-facing message strings

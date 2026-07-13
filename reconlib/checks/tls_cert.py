@@ -11,7 +11,7 @@ import socket
 import ssl
 from datetime import datetime, timezone
 
-from ..models import Finding, Status, Severity
+from ..models import Finding, Severity, Status
 
 CATEGORY = "TLS / Certificate"
 
@@ -47,7 +47,7 @@ def _supports_legacy(domain: str, max_version) -> bool:
         with socket.create_connection((domain, _PORT), timeout=_TIMEOUT) as sock:
             with ctx.wrap_socket(sock, server_hostname=domain):
                 return True
-    except (ssl.SSLError, socket.error, OSError):
+    except (ssl.SSLError, OSError):
         return False
 
 

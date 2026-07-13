@@ -7,20 +7,21 @@ single report dict that the web dashboard and CSV exporter both consume.
 from __future__ import annotations
 
 import time
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FuturesTimeout
 from datetime import datetime, timezone
 
-from .models import Finding, Status, Severity, score_findings
-from .utils import normalize_domain, make_resolver, InvalidDomain
 from .checks import (
+    attack_surface,
     dns_records,
-    email_auth,
     dnssec_caa,
-    tls_cert,
+    email_auth,
     http_headers,
     registration,
-    attack_surface,
+    tls_cert,
 )
+from .models import Finding, Severity, Status, score_findings
+from .utils import make_resolver, normalize_domain
 
 # Ordered so the dashboard shows controls before informational surface data.
 CHECKS = [

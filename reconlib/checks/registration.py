@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 import requests
 
-from ..models import Finding, Status, Severity
+from ..models import Finding, Severity, Status
 
 CATEGORY = "Domain Registration"
 _TIMEOUT = 10.0

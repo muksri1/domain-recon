@@ -11,18 +11,31 @@ Run:  python app.py   (then open http://127.0.0.1:5000)
 from __future__ import annotations
 
 import argparse
+import os
 
-from flask import Flask, jsonify, request, render_template, Response
+from flask import Flask, Response, jsonify, render_template, request
 
-from reconlib import scan_domain, findings_to_csv, InvalidDomain
+from reconlib import InvalidDomain, findings_to_csv, scan_domain
+from reconlib.demo import DEMO_REPORT
 from reconlib.utils import normalize_domain
 
-app = Flask(__name__)
+# Absolute template/static paths so the server works from any working directory
+# (and when the package is installed elsewhere).
+_HERE = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__,
+            template_folder=os.path.join(_HERE, "templates"),
+            static_folder=os.path.join(_HERE, "static"))
 
 
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/api/demo")
+def api_demo():
+    """A canned report so the dashboard can be demoed offline (used by ?demo=1)."""
+    return jsonify(DEMO_REPORT)
 
 
 @app.get("/api/scan")

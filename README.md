@@ -1,5 +1,9 @@
 # 🛡️ Domain Recon — Security Controls Review
 
+[![CI](https://github.com/muksri1/domain-recon/actions/workflows/ci.yml/badge.svg)](https://github.com/muksri1/domain-recon/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+
 A lightweight tool that takes a **domain name** and reviews the **security
 controls** published around it, then presents the results as a **web dashboard**
 with a **CSV export**. Built for learning and for defensive security posture
@@ -8,6 +12,8 @@ checks.
 Everything it does is **passive**: it only reads publicly available data and the
 target's own published records. It performs **no exploitation, brute-forcing, or
 intrusive scanning**. Use it only on domains you own or are authorized to assess.
+
+![Domain Recon dashboard](docs/dashboard.png)
 
 ---
 
@@ -41,6 +47,20 @@ python app.py
 # 3. Open http://127.0.0.1:5000 and enter a domain
 ```
 
+Prefer a **container**? No local Python needed:
+
+```bash
+docker build -t domain-recon .
+docker run --rm -p 5000:5000 domain-recon      # open http://localhost:5000
+```
+
+Want the **CLI on your PATH**? Install the package:
+
+```bash
+pip install .
+domain-recon example.com --csv out.csv
+```
+
 ### Command line
 
 ```bash
@@ -51,6 +71,11 @@ python cli.py example.com --json out.json # also save the full report as JSON
 
 The CLI exits non-zero when any control **FAILs**, so it can gate a CI pipeline.
 
+### Try it without scanning anything
+
+Open **http://127.0.0.1:5000/?demo=1** for an offline sample report, or share a
+**deep link** like `http://127.0.0.1:5000/?domain=example.com` to auto-run a scan.
+
 ---
 
 ## HTTP API
@@ -59,6 +84,7 @@ The CLI exits non-zero when any control **FAILs**, so it can gate a CI pipeline.
 |----------|-------------|
 | `GET /api/scan?domain=example.com` | JSON report |
 | `GET /api/scan.csv?domain=example.com` | CSV download |
+| `GET /api/demo` | Canned sample report (offline) |
 | `GET /healthz` | Health check |
 
 ---
@@ -69,14 +95,26 @@ The CLI exits non-zero when any control **FAILs**, so it can gate a CI pipeline.
 app.py                 Flask web server (dashboard + JSON/CSV API)
 cli.py                 Command-line runner
 reconlib/
-  scanner.py           Orchestrates all checks, scores results
+  scanner.py           Orchestrates all checks (parallel, time-bounded), scores results
   models.py            Finding model, scoring
   utils.py             Domain normalization, DNS resolver
   export.py            CSV serialization
+  demo.py              Offline sample report for demo mode
   checks/              One module per control family
 templates/index.html   Dashboard markup
 static/style.css       Dashboard styling (light/dark aware)
 static/app.js          Dashboard logic + client-side CSV export
+tests/                 Offline unit tests
+Dockerfile             Container image for the dashboard
+.github/workflows/     CI: ruff lint + pytest on Python 3.9–3.12
+```
+
+## Development
+
+```bash
+pip install -e ".[dev]"   # install with ruff + pytest
+ruff check .              # lint
+pytest -q                 # run the offline test suite
 ```
 
 ## How the score works

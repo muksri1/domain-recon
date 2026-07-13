@@ -12,6 +12,8 @@ import argparse
 import json
 import sys
 
+from reconlib import InvalidDomain, findings_to_csv, scan_domain
+
 # Windows consoles default to a legacy code page; force UTF-8 so em-dashes and
 # check marks render instead of mojibake.
 for _stream in (sys.stdout, sys.stderr):
@@ -19,8 +21,6 @@ for _stream in (sys.stdout, sys.stderr):
         _stream.reconfigure(encoding="utf-8")
     except (AttributeError, ValueError):
         pass
-
-from reconlib import scan_domain, findings_to_csv, InvalidDomain
 
 # ANSI colors (disabled automatically when output is not a TTY).
 _C = {"PASS": "\033[32m", "WARN": "\033[33m", "FAIL": "\033[31m",

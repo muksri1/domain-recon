@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+
 import dns.resolver
 
 # Permissive but strict enough to reject URLs, paths, and obvious junk.
@@ -31,7 +32,7 @@ def normalize_domain(raw: str) -> str:
 
     # Drop scheme and anything after the first slash, ? or #.
     value = re.sub(r"^[a-z]+://", "", value)
-    value = re.split(r"[/?#]", value, 1)[0]
+    value = re.split(r"[/?#]", value, maxsplit=1)[0]
 
     # Drop credentials and port.
     value = value.split("@")[-1]
