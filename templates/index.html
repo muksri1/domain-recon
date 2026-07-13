@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Domain Recon — Security Controls Review</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🛡️</span>
+      <div>
+        <h1>Domain Recon</h1>
+        <p class="tagline">Passive security-controls posture review</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <form id="scan-form" class="scan-form" autocomplete="off">
+      <input id="domain-input" type="text" placeholder="example.com"
+             aria-label="Domain name" required />
+      <button id="scan-btn" type="submit">Scan</button>
+    </form>
+    <p id="error" class="error" hidden></p>
+
+    <section id="loading" class="loading" hidden>
+      <div class="spinner"></div>
+      <p>Reviewing DNS, email auth, TLS, HTTP headers, registration &amp; attack surface…</p>
+    </section>
+
+    <section id="results" hidden>
+      <div class="summary">
+        <div class="gauge" id="gauge">
+          <div class="gauge-score"><span id="score">0</span><small>/100</small></div>
+          <div class="gauge-grade">Grade <strong id="grade">–</strong></div>
+        </div>
+        <div class="summary-meta">
+          <h2 id="result-domain"></h2>
+          <p id="result-time" class="muted"></p>
+          <div class="chips" id="chips"></div>
+          <button id="download-csv" class="download-btn">⬇ Download CSV</button>
+        </div>
+      </div>
+
+      <div class="categories" id="categories"></div>
+
+      <div class="findings-panel">
+        <div class="findings-head">
+          <h3>Findings</h3>
+          <div class="filters" id="filters">
+            <button data-filter="ALL" class="active">All</button>
+            <button data-filter="FAIL">Fail</button>
+            <button data-filter="WARN">Warn</button>
+            <button data-filter="PASS">Pass</button>
+            <button data-filter="INFO">Info</button>
+          </div>
+        </div>
+        <table class="findings-table">
+          <thead>
+            <tr>
+              <th>Status</th><th>Category</th><th>Check</th>
+              <th>Detail</th><th>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody id="findings-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="disclaimer">
+      <p>Passive assessment using public data and the target's own published records
+         (DNS, TLS, HTTP headers, RDAP, Certificate Transparency). No exploitation or
+         intrusive scanning is performed. Use only on domains you own or are authorized
+         to assess.</p>
+    </footer>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
